@@ -2,6 +2,11 @@ module Rosalind.List where
 
 import Data.List (isPrefixOf, groupBy, sort)
 
+
+kMers :: Int -> [a] -> [[a]]
+kMers 0 _ = [[]]
+kMers n alph = concat $ map (\a -> map (a:) $ kMers (n-1) alph) alph 
+
 removeSublist :: (Eq a) => [a] -> [a] -> [a]
 removeSublist pat l = f l
     where len = length pat

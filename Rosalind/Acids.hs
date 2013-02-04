@@ -3,6 +3,7 @@ module Rosalind.Acids  where
 import Data.List (isPrefixOf, maximumBy, inits, minimumBy, isInfixOf, find)
 import Data.Maybe (fromJust)
 import Rosalind.List 
+import Text.Regex.TDFA
 
 data Base = Adenin | Cytosine | Guanine | Thymine | Uracil deriving Eq
 
@@ -149,7 +150,12 @@ sharedMotif dnas = Acid $ fromJust $ find (\sl -> foldl (\b (Acid ds) -> b && (s
     where (Acid l) =  minimumBy (\(Acid l1) (Acid l2) -> compare (length l1) (length l2)) dnas
 
     
-
+kMerComposition :: Int -> DNA -> [Int]
+kMerComposition k dna = map (countSubs str) $ kMers k "ACGT" 
+    where str = show dna
+          countSubs "" _ = 0
+          countSubs str pat | pat `isPrefixOf` str = 1 + countSubs (tail str) pat
+                            | otherwise = countSubs (tail str) pat
 
 
 
