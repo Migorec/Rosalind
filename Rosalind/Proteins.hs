@@ -1,4 +1,4 @@
-module Rosalind.Proteins (translate, translateAll, rnaVars) where
+module Rosalind.Proteins (translate, translateAll, rnaVars, massTable) where
 
 import Rosalind.Acids
 import Data.Map (fromList, lookup)
@@ -44,6 +44,27 @@ vars 'R' = 6
 vars 'G' = 4
 vars 'W' = 1 
 
+
+massTable 'A' = 71.03711
+massTable 'C' = 103.00919
+massTable 'D' = 115.02694
+massTable 'E' = 129.04259
+massTable 'F' = 147.06841
+massTable 'G' = 57.02146
+massTable 'H' = 137.05891
+massTable 'I' = 113.08406
+massTable 'K' = 128.09496
+massTable 'L' = 113.08406
+massTable 'M' = 131.04049
+massTable 'N' = 114.04293
+massTable 'P' = 97.05276
+massTable 'Q' = 128.05858
+massTable 'R' = 156.10111
+massTable 'S' = 87.03203
+massTable 'T' = 101.04768
+massTable 'V' = 99.06841
+massTable 'W' = 186.07931
+massTable 'Y' = 163.06333 
 
 rnaVars :: String -> Integer
 rnaVars s = 3 * (product $ map vars s)
