@@ -51,6 +51,20 @@ trie lss k = snd $ trie' (sort lss) k
                               (succ k, []) $ groupBy (\(l1:ls1) (l2:ls2) -> l1==l2) lls
             
 
+sharedInit :: (Eq a) => [a] -> [a] -> [a]
+sharedInit [] _ = []
+sharedInit _ [] = []
+sharedInit (a:as) (b:bs) | a==b = a:(sharedInit as bs)
+                         | otherwise = []
+
+
+failureList list = 0 : (f (tail list) (replicate (length $ tail list) 0))
+    where f [] [] = []
+          f l fl = case sharedInit l list of
+                    [] -> (head fl) : (f (tail l) (tail fl))
+                    si -> let n = length si 
+                              (fl':fls) = (zipWith max [1..n] $ take n fl) ++ (drop n fl)
+                          in fl':(f (tail l) fls)
 
 
 
