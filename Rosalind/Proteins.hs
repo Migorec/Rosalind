@@ -1,9 +1,12 @@
-module Rosalind.Proteins (translate, translateAll, rnaVars, massTable) where
+module Rosalind.Proteins (translate, translateAll, rnaVars, massTable, identify) where
 
 import Rosalind.Acids
 import Data.Map (fromList, lookup)
 import Prelude hiding (lookup)
 import Control.Monad (liftM)
+import Data.Tuple (swap)
+import Data.Monoid
+import Data.List (find)
 
 
 table = fromList [("UUU", 'F'), ("CUU", 'L'), ("AUU", 'I'), ("GUU", 'V'),
@@ -45,26 +48,38 @@ vars 'G' = 4
 vars 'W' = 1 
 
 
-massTable 'A' = 71.03711
-massTable 'C' = 103.00919
-massTable 'D' = 115.02694
-massTable 'E' = 129.04259
-massTable 'F' = 147.06841
-massTable 'G' = 57.02146
-massTable 'H' = 137.05891
-massTable 'I' = 113.08406
-massTable 'K' = 128.09496
-massTable 'L' = 113.08406
-massTable 'M' = 131.04049
-massTable 'N' = 114.04293
-massTable 'P' = 97.05276
-massTable 'Q' = 128.05858
-massTable 'R' = 156.10111
-massTable 'S' = 87.03203
-massTable 'T' = 101.04768
-massTable 'V' = 99.06841
-massTable 'W' = 186.07931
-massTable 'Y' = 163.06333 
+mTable = [('A', 71.03711),
+          ('C', 103.00919),
+          ('D', 115.02694),
+          ('E', 129.04259),
+          ('F', 147.06841),
+          ('G', 57.02146),
+          ('H', 137.05891),
+          ('I', 113.08406),
+          ('K', 128.09496),
+          ('L', 113.08406),
+          ('M', 131.04049),
+          ('N', 114.04293),
+          ('P', 97.05276),
+          ('Q', 128.05858),
+          ('R', 156.10111),
+          ('S', 87.03203),
+          ('T', 101.04768),
+          ('V', 99.06841),
+          ('W', 186.07931),
+          ('Y', 163.06333)]
+
+mMap = fromList mTable
+
+-- ????
+massTable c = maybe 0 id $ lookup c mMap
+
+reverseMass :: Double -> Maybe Char
+reverseMass m = fmap fst $ find (\(_,v) -> abs (v-m) < 0.001) mTable
+
+
+identify :: [Double] -> Maybe String
+identify l =mconcat $ map (fmap (:[]) . reverseMass) $ zipWith (-) (tail l) l
 
 rnaVars :: String -> Integer
 rnaVars s = 3 * (product $ map vars s)
